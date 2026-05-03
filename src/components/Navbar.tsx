@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Zap, User, LogOut } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { supabase } from '../lib/supabase';
+import { useNavigate } from 'react-router-dom';
 
 export const Navbar = () => {
   const [user, setUser] = useState<any>(null);
+  const [clickCount, setClickCount] = useState(0);
+  const [showAdminLink, setShowAdminLink] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -30,6 +35,22 @@ export const Navbar = () => {
     await supabase.auth.signOut();
   };
 
+  const handleLogoClick = () => {
+    const newCount = clickCount + 1;
+    setClickCount(newCount);
+    if (newCount === 5) {
+      setShowAdminLink(true);
+      // Reset after 10 seconds
+      setTimeout(() => {
+        setShowAdminLink(false);
+        setClickCount(0);
+      }, 10000);
+    }
+    if (newCount === 1) {
+      navigate('/');
+    }
+  };
+
   return (
     <nav className="glass" style={{
       position: 'fixed',
@@ -46,7 +67,10 @@ export const Navbar = () => {
       gap: '32px',
       zIndex: 1000
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, fontFamily: 'var(--font-heading)', cursor: 'pointer' }} onClick={() => window.location.href = '/'}>
+      <div 
+        style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, fontFamily: 'var(--font-heading)', cursor: 'pointer' }} 
+        onClick={handleLogoClick}
+      >
         <Zap size={20} color="var(--accent-primary)" fill="var(--accent-primary)" />
         ZENITH
       </div>
@@ -54,7 +78,16 @@ export const Navbar = () => {
       <div style={{ display: 'flex', gap: '24px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
         <a href="#strategy" style={{ color: 'inherit', textDecoration: 'none' }}>Strategy</a>
         <a href="#leads" style={{ color: 'inherit', textDecoration: 'none' }}>Clients</a>
-        <a href="/admin" style={{ color: 'inherit', textDecoration: 'none', opacity: user ? 1 : 0.2 }}>Intelligence</a>
+        {showAdminLink && (
+          <motion.a 
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            href="/admin" 
+            style={{ color: 'var(--accent-primary)', textDecoration: 'none', fontWeight: 600 }}
+          >
+            Intelligence Portal
+          </motion.a>
+        )}
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
