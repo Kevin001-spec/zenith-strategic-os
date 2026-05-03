@@ -72,7 +72,7 @@ export const Navbar = () => {
         <span style={{ letterSpacing: '0.1em' }}>ZENITH</span>
       </div>
       
-      <div style={{ display: 'flex', gap: '32px', color: 'var(--text-secondary)', fontSize: '0.9rem', fontWeight: 500 }}>
+      <div className="nav-links" style={{ display: 'flex', gap: '32px', color: 'var(--text-secondary)', fontSize: '0.9rem', fontWeight: 500 }}>
         <a href="#strategy" style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }}>Architecture</a>
         <a href="#leads" style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }}>Ecosystem</a>
         

@@ -16,15 +16,20 @@ export const LeadForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => 
     
     const { error } = await supabase
       .from('zenith_leads')
-      .insert([{ email, company, challenge }]);
+      .insert([{ email, company, challenge, status: 'pending' }]);
 
     setIsSubmitting(false);
-    if (!error) {
+    if (error) {
+      alert('Strategic deployment failed: ' + error.message);
+    } else {
       setIsSuccess(true);
+      setEmail('');
+      setCompany('');
+      setChallenge('');
       setTimeout(() => {
         setIsSuccess(false);
         onClose();
-      }, 3000);
+      }, 4000);
     }
   };
 
